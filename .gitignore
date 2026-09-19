@@ -1,0 +1,19 @@
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local SQLite Database & Vault
+ums_vault.db
+*.db
+*.sqlite3
+
+# OS metadata
+.DS_Store
+.DS_Store?
+._*
+
+# Logs & temp files
+*.log
+scratch/
+.system_generated/

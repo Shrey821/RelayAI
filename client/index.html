@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Memory Schema (UMS) - Cross-LLM Memory Bridge</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Application Container -->
+  <div class="app-wrapper">
+    <!-- Top Header -->
+    <header class="navbar">
+      <div class="nav-left">
+        <div class="logo-mark">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div class="logo-title">
+          <span class="brand-title">Universal Memory Schema</span>
+          <span class="badge badge-subtle">v1.0.0</span>
+        </div>
+      </div>
+
+      <!-- Streamlined 3-Tab Navigation -->
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="studio">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Memory Migration
+        </button>
+        <button class="nav-tab" data-tab="handoff">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Chat Handoff
+        </button>
+        <button class="nav-tab" data-tab="vault">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          Vault & IDE Rules
+        </button>
+      </nav>
+
+      <div class="nav-right">
+        <div class="extension-status-badge" title="Load extension from /extension directory">
+          <span class="status-dot-emerald"></span>
+          <span>Companion Extension Ready</span>
+        </div>
+        <button id="btn-load-demo" class="btn btn-primary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Load 1-Click Demo
+        </button>
+        <button id="btn-theme-toggle" class="btn-icon" title="Toggle theme">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="main-container">
+      
+      <!-- TAB 1: MEMORY MIGRATION STUDIO -->
+      <section id="tab-studio" class="tab-panel active">
+        <div class="panel-header-banner">
+          <div>
+            <h1>Cross-LLM Memory Migration Studio</h1>
+            <p class="subtitle">Extract memory via official provider prompts, normalize into UMS, hydrate target LLMs, and verify semantic retention.</p>
+          </div>
+          <div class="quick-stats-pill">
+            <span class="stat-dot"></span>
+            <span>Zero API Keys Required • 100% Browser Compliant</span>
+          </div>
+        </div>
+
+        <!-- Wizard Stepper Indicator (Clean 4 Steps) -->
+        <div class="stepper-bar">
+          <div class="step-node active" data-step="1">
+            <div class="step-num">1</div>
+            <div class="step-label">Source Memory</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-node" data-step="2">
+            <div class="step-num">2</div>
+            <div class="step-label">Review & Prune</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-node" data-step="3">
+            <div class="step-num">3</div>
+            <div class="step-label">Target & Sync</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-node" data-step="4">
+            <div class="step-num">4</div>
+            <div class="step-label">Verified Retention</div>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- STEP 1: SOURCE SELECTION & EXTRACTION -->
+        <!-- ========================================== -->
+        <div class="studio-card step-section" id="studio-step-1">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="step-pill">Step 1 of 4</span>
+              <h2>Select Source Model & Input Memory</h2>
+            </div>
+            <span class="card-hint">Where are you migrating from?</span>
+          </div>
+
+          <div class="provider-selection-grid">
+            <div class="provider-card selected" data-source="chatgpt">
+              <div class="provider-icon icon-chatgpt">GPT</div>
+              <div class="provider-details">
+                <h3>OpenAI ChatGPT</h3>
+                <p>Saved memories & Custom Instructions</p>
+              </div>
+              <div class="check-indicator">✓</div>
+            </div>
+
+            <div class="provider-card" data-source="claude">
+              <div class="provider-icon icon-claude">C</div>
+              <div class="provider-details">
+                <h3>Anthropic Claude</h3>
+                <p>Claude Memory & Anthropic profile</p>
+              </div>
+              <div class="check-indicator">✓</div>
+            </div>
+
+            <div class="provider-card" data-source="gemini">
+              <div class="provider-icon icon-gemini">G</div>
+              <div class="provider-details">
+                <h3>Google Gemini</h3>
+                <p>Gemini Gems & Saved Info</p>
+              </div>
+              <div class="check-indicator">✓</div>
+            </div>
+
+            <div class="provider-card" data-source="raw">
+              <div class="provider-icon icon-raw">TXT</div>
+              <div class="provider-details">
+                <h3>Notes / Freeform</h3>
+                <p>Markdown notes or developer rules</p>
+              </div>
+              <div class="check-indicator">✓</div>
+            </div>
+          </div>
+
+          <!-- Official Prompt Box -->
+          <div class="official-prompt-box">
+            <div class="prompt-box-header">
+              <span class="prompt-tag">Official Provider Extraction Prompt</span>
+              <button id="btn-copy-extraction-prompt" class="btn btn-subtle btn-xs">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy Extraction Prompt
+              </button>
+            </div>
+            <pre id="display-extraction-prompt" class="prompt-text-display"></pre>
+          </div>
+
+          <!-- Ingestion Input Area -->
+          <div class="form-group mt-4">
+            <div class="label-row">
+              <label for="input-raw-memory">Paste Response from Source Model or Export Dump:</label>
+              <div class="badge-row">
+                <label for="file-upload-memory" class="btn-link-action" style="cursor: pointer;">📁 Upload Export (.json, .txt)</label>
+                <input type="file" id="file-upload-memory" accept=".json,.txt,.md" style="display: none;">
+                <button id="btn-demo-paste" class="btn-link-action">Fill Demo Data</button>
+                <span id="source-char-counter" class="text-muted">0 chars</span>
+              </div>
+            </div>
+            <textarea id="input-raw-memory" rows="7" placeholder="Paste the output of the extraction prompt, your exported memory list, or upload conversations.json here..."></textarea>
+          </div>
+
+          <div class="card-footer-actions">
+            <div></div>
+            <button id="btn-parse-memory" class="btn btn-primary">
+              Parse & Continue to Review (Step 2)
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- STEP 2: REVIEW & 3-TIER PRUNING -->
+        <!-- ========================================== -->
+        <div class="studio-card step-section d-none" id="studio-step-2">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="step-pill">Step 2 of 4</span>
+              <h2>Review Parsed Memory & Privacy Controls</h2>
+            </div>
+            <span class="card-hint">Adjust what context travels to the target LLM</span>
+          </div>
+
+          <div class="pruning-controls-grid">
+            <!-- Tier 1 Card -->
+            <div class="tier-card tier-1-card">
+              <div class="tier-header">
+                <div class="tier-title">
+                  <span class="tier-badge">Tier 1</span>
+                  <h3>AI Identity & Long-Term Memory</h3>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="chk-tier-1" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <p class="tier-desc">Languages, frameworks, coding standards, tone, and strict prohibitions.</p>
+
+              <!-- Work-focus filter banner -->
+              <div class="filter-toggle-box">
+                <div class="filter-toggle-left">
+                  <strong>Claude Work-Focus Filter</strong>
+                  <span>Strip non-work personal trivia to maximize Claude memory acceptance</span>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="chk-filter-non-work" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
+              <div class="tier-preview-list" id="t1-preview-items">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Tier 2 Card -->
+            <div class="tier-card tier-2-card">
+              <div class="tier-header">
+                <div class="tier-title">
+                  <span class="tier-badge">Tier 2</span>
+                  <h3>Active Working Context</h3>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="chk-tier-2" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <p class="tier-desc">Current objectives, active projects, and decisions finalized today.</p>
+
+              <div class="tier-preview-list" id="t2-preview-items">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- Tier 3 Card -->
+            <div class="tier-card tier-3-card">
+              <div class="tier-header">
+                <div class="tier-title">
+                  <span class="tier-badge">Tier 3</span>
+                  <h3>Conversation Transcripts</h3>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" id="chk-tier-3">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              <p class="tier-desc">Raw chat logs. <em>Excluded by default to prevent context bloat and token waste.</em></p>
+
+              <div class="tier-preview-list" id="t3-preview-items">
+                <div class="empty-hint">Excluded by default. 0 tokens wasted.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer-actions space-between">
+            <button id="btn-back-step-1" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+              Back to Source
+            </button>
+            <button id="btn-proceed-hydrate" class="btn btn-primary">
+              Continue to Target & Sync (Step 3)
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- STEP 3: TARGET SELECTION & 1-CLICK SYNC -->
+        <!-- ========================================== -->
+        <div class="studio-card step-section d-none" id="studio-step-3">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="step-pill">Step 3 of 4</span>
+              <h2>Target Model & 1-Click Synchronization</h2>
+            </div>
+            <span class="card-hint">No API keys required. Sync via the UMS Browser Extension or 1-Click Copy.</span>
+          </div>
+
+          <!-- Target Provider Selector -->
+          <div class="target-tabs">
+            <button class="target-tab active" data-target="claude">
+              <strong>Anthropic Claude</strong>
+              <span>Settings → Memory → Start import</span>
+            </button>
+            <button class="target-tab" data-target="chatgpt">
+              <strong>OpenAI ChatGPT</strong>
+              <span>Custom Instructions & Memory</span>
+            </button>
+            <button class="target-tab" data-target="gemini">
+              <strong>Google Gemini</strong>
+              <span>Gems / System Context</span>
+            </button>
+          </div>
+
+          <!-- Execution Box: 1-Click Extension & Copy -->
+          <div class="sync-execution-box mt-4">
+            <div class="sync-exec-card">
+              <div class="sync-exec-header">
+                <div class="sync-exec-icon">⚡</div>
+                <div>
+                  <h3>1-Click Browser Extension Ingest (Recommended)</h3>
+                  <p>Directly places this memory payload into your active browser session on Claude.ai or ChatGPT.com with zero copy-pasting.</p>
+                </div>
+              </div>
+              <div class="sync-exec-actions mt-3">
+                <button id="btn-trigger-extension-inject" class="btn btn-emerald">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  Push into Active Browser Tab
+                </button>
+                <span class="text-muted text-xs">Uses your authenticated session in Claude.ai or ChatGPT.com</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Target Hydration Output Area -->
+          <div class="hydration-result-box mt-4">
+            <div class="result-toolbar">
+              <div class="metrics-pill">
+                <span id="hydrated-token-count">~320 tokens</span>
+                <span class="pill-divider">•</span>
+                <span id="token-savings-badge" class="savings-badge">92% smaller than raw chat history</span>
+              </div>
+              <div class="actions-group">
+                <button id="btn-copy-hydrated" class="btn btn-secondary btn-sm">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Ingest Text
+                </button>
+              </div>
+            </div>
+
+            <div class="instructions-banner" id="hydration-instructions-banner">
+              <!-- Injected dynamically -->
+            </div>
+
+            <pre id="hydrated-output-display" class="code-preview-display"></pre>
+          </div>
+
+          <div class="card-footer-actions space-between">
+            <button id="btn-back-step-2" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+              Back to Review
+            </button>
+            <button id="btn-proceed-verify" class="btn btn-primary">
+              Step 4: Verify Retention Diff
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- STEP 4: VERIFIED RETENTION & DIFF -->
+        <!-- ========================================== -->
+        <div class="studio-card step-section d-none" id="studio-step-4">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="step-pill">Step 4 of 4</span>
+              <h2>Closed-Loop Verification & Retention Diff</h2>
+            </div>
+            <span class="card-hint">Audit what the target LLM actually retained vs what was adapted or filtered</span>
+          </div>
+
+          <!-- Official Verification Prompt Callout -->
+          <div class="verification-callout">
+            <div class="callout-header">
+              <div class="callout-icon">🔍</div>
+              <div>
+                <strong>Official Provider Verification Query</strong>
+                <p>Send this query in your target AI chat to confirm what it learned:</p>
+              </div>
+            </div>
+            <div class="query-box">
+              <code id="verification-query-text">"I updated my memory. What did you learn about me?"</code>
+              <button id="btn-copy-verify-query" class="btn btn-subtle btn-xs">Copy Query</button>
+            </div>
+          </div>
+
+          <div class="form-group mt-4">
+            <div class="label-row">
+              <label for="input-verify-response">Target Model's Response to Verification Query:</label>
+              <button id="btn-fill-demo-verification" class="btn-link-action">Fill Simulated Response</button>
+            </div>
+            <textarea id="input-verify-response" rows="5" placeholder="Paste the target model's answer here..."></textarea>
+          </div>
+
+          <div class="card-footer-actions">
+            <div></div>
+            <button id="btn-compute-diff" class="btn btn-success">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              Compute Semantic Retention Diff
+            </button>
+          </div>
+
+          <!-- Diff Results Dashboard -->
+          <div id="diff-dashboard" class="diff-dashboard d-none mt-4">
+            <div class="diff-summary-banner">
+              <div class="gauge-container">
+                <div class="retention-score" id="diff-retention-score">92%</div>
+                <div class="retention-label">Retention Score</div>
+              </div>
+              <div class="diff-stats-grid">
+                <div class="stat-card stat-learned">
+                  <div class="stat-value" id="count-learned">0</div>
+                  <div class="stat-name">🟢 Retained / Learned</div>
+                </div>
+                <div class="stat-card stat-adapted">
+                  <div class="stat-value" id="count-adapted">0</div>
+                  <div class="stat-name">🟡 Adapted / Consolidated</div>
+                </div>
+                <div class="stat-card stat-filtered">
+                  <div class="stat-value" id="count-filtered">0</div>
+                  <div class="stat-name">🔴 Filtered / Omitted</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="suggestions-box mt-3" id="diff-suggestions-box">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Detailed Diff List -->
+            <div class="diff-entries-list mt-4" id="diff-entries-container">
+              <!-- Cards dynamically populated -->
+            </div>
+          </div>
+
+          <div class="card-footer-actions space-between mt-4">
+            <button id="btn-back-step-3" class="btn btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+              Back to Target Sync
+            </button>
+            <button id="btn-restart-migration" class="btn btn-secondary">
+              ↺ Start New Migration
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 2: ACTIVE CHAT & CONTEXT HANDOFF -->
+      <!-- ========================================== -->
+      <section id="tab-handoff" class="tab-panel">
+        <div class="panel-header-banner">
+          <div>
+            <h1>Zero-Token Active Chat & Context Transfer Studio</h1>
+            <p class="subtitle">Transfer ongoing multi-turn debugging sessions or problem-solving chats between LLMs with zero token burn and zero loss of working code context.</p>
+          </div>
+          <div class="quick-stats-pill">
+            <span class="stat-dot"></span>
+            <span>Zero Extra LLM Tokens • Local AST/Regex Distillation • >90% Reduction</span>
+          </div>
+        </div>
+
+        <!-- LIVE BROWSER CROSS-TAB RADAR PANEL -->
+        <div id="web-radar-panel" class="web-radar-panel mb-4">
+          <div class="web-radar-header">
+            <div class="web-radar-title-group">
+              <span class="status-dot-emerald"></span>
+              <div>
+                <div class="radar-main-title">Live Browser AI Tabs Radar</div>
+                <div id="web-radar-status-text" class="radar-status-subtext">Scanning for open ChatGPT, Claude, Gemini tabs...</div>
+              </div>
+            </div>
+            <div class="web-radar-header-actions">
+              <span id="web-radar-count-badge" class="badge badge-emerald">Scanning...</span>
+              <button id="btn-web-rescan-tabs" class="btn btn-secondary btn-sm" title="Rescan open tabs in browser">
+                🔄 Rescan Browser Tabs
+              </button>
+            </div>
+          </div>
+
+          <!-- Detected open tabs badges -->
+          <div id="web-radar-tabs-chips" class="web-radar-chips-container mt-2"></div>
+
+          <!-- Interactive Source & Target Tab Pickers -->
+          <div id="web-radar-selectors-container" class="web-radar-selectors-box mt-3 d-none">
+            <div class="web-radar-grid">
+              <div class="form-group mb-0">
+                <label class="compact-label" style="font-weight: 700; color: #cbd5e1; margin-bottom: 6px; display: block;">Source Chat (Extract From Browser Tab):</label>
+                <select id="web-radar-source-select" class="form-input"></select>
+              </div>
+              <div class="handoff-arrow" style="font-size: 1.4rem; color: var(--color-primary-light);">➔</div>
+              <div class="form-group mb-0">
+                <label class="compact-label" style="font-weight: 700; color: #cbd5e1; margin-bottom: 6px; display: block;">Target Chat (Send & Continue In):</label>
+                <select id="web-radar-target-select" class="form-input"></select>
+              </div>
+            </div>
+
+            <div class="web-radar-action-buttons mt-3">
+              <button id="btn-web-transfer-full" class="btn btn-emerald">
+                ⚡ 1-Click Transfer Full Chat (As-Is)
+              </button>
+              <button id="btn-web-transfer-summary" class="btn btn-secondary">
+                🧠 1-Click Transfer Condensed Summary
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="studio-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="step-pill">Handoff Config</span>
+              <h2>Source & Target AI Channels</h2>
+            </div>
+            <span class="card-hint">Select your source chat platform and target destination</span>
+          </div>
+
+          <div class="handoff-direction-grid">
+            <div class="form-group">
+              <label>Source AI (Where the chat is currently happening):</label>
+              <select id="handoff-source-select" class="form-input">
+                <option value="chatgpt" selected>OpenAI ChatGPT</option>
+                <option value="claude">Anthropic Claude</option>
+                <option value="gemini">Google Gemini</option>
+                <option value="perplexity">Perplexity AI</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="mistral">Mistral Le Chat</option>
+              </select>
+            </div>
+            <div class="handoff-arrow">➔</div>
+            <div class="form-group">
+              <label>Target AI (Where you want to continue immediately):</label>
+              <select id="handoff-target-select" class="form-input">
+                <option value="claude" selected>Anthropic Claude</option>
+                <option value="chatgpt">OpenAI ChatGPT</option>
+                <option value="gemini">Google Gemini</option>
+                <option value="perplexity">Perplexity AI</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="mistral">Mistral Le Chat</option>
+                <option value="claude_code">Claude Code / IDE Agent</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <div class="label-row">
+              <label for="input-handoff-chat">Paste Active Ongoing Chat Thread or Upload Export:</label>
+              <div class="badge-row">
+                <label for="file-upload-handoff" class="btn-link-action" style="cursor: pointer;">📁 Upload Chat File (.json, .txt)</label>
+                <input type="file" id="file-upload-handoff" accept=".json,.txt,.md" style="display: none;">
+                <button id="btn-load-demo-chat" class="btn-link-action">Load Sample Thread (Next.js 15 JWT Bug)</button>
+                <span id="handoff-char-counter" class="text-muted">0 chars</span>
+              </div>
+            </div>
+            <textarea id="input-handoff-chat" rows="8" placeholder="Paste the ongoing multi-turn chat text, upload conversations.json, or use the Browser Extension to extract it directly from your active browser tab in 1 click..."></textarea>
+          </div>
+
+          <div class="card-footer-actions">
+            <div></div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button id="btn-distill-full" class="btn btn-emerald">
+                ⚡ Compile Full Context (As-Is Handoff)
+              </button>
+              <button id="btn-distill-chat" class="btn btn-primary">
+                🧠 Compile Condensed Summary (0 Tokens)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Handoff Results Container -->
+        <div id="handoff-results-panel" class="studio-card d-none mt-4">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="badge badge-emerald">Distillation Complete</span>
+              <h2>Distilled Context Handoff Packet</h2>
+            </div>
+            <div class="metrics-pill">
+              <span id="handoff-savings-badge" class="savings-badge">92% Token Savings</span>
+              <span class="pill-divider">•</span>
+              <span id="handoff-token-count">~280 tokens</span>
+            </div>
+          </div>
+
+          <!-- Summary Grid of Extracted Dimensions -->
+          <div class="handoff-extracted-grid mt-3">
+            <div class="extracted-item-card">
+              <div class="extracted-item-label">🎯 Primary Goal</div>
+              <div class="extracted-item-val" id="handoff-extracted-goal">-</div>
+            </div>
+            <div class="extracted-item-card">
+              <div class="extracted-item-label">🛠️ Tech Stack Detected</div>
+              <div class="extracted-item-val" id="handoff-extracted-tech">-</div>
+            </div>
+            <div class="extracted-item-card">
+              <div class="extracted-item-label">⚡ Immediate Next Task</div>
+              <div class="extracted-item-val" id="handoff-extracted-next">-</div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <div class="label-row">
+              <label><strong>Ready-to-Inject Target Handoff Primer:</strong></label>
+              <div class="actions-group-inline">
+                <button id="btn-copy-handoff-primer-web" class="btn btn-primary btn-sm">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Handoff Primer
+                </button>
+                <button id="btn-launch-target-ai" class="btn btn-secondary btn-sm">
+                  🚀 Launch Target AI
+                </button>
+              </div>
+            </div>
+            <pre id="handoff-primer-display" class="code-preview-display mt-2"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- TAB 3: MEMORY VAULT & IDE RULES -->
+      <!-- ========================================== -->
+      <section id="tab-vault" class="tab-panel">
+        <div class="panel-header-banner">
+          <div>
+            <h1>Personal Memory Vault & IDE Rules</h1>
+            <p class="subtitle">Manage persistent AI personas stored locally in SQLite (`ums_vault.db`) and generate rules for Claude Code, Cursor, and Windsurf.</p>
+          </div>
+          <div class="vault-top-actions">
+            <button id="btn-export-vault-json" class="btn btn-secondary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download .ums.json
+            </button>
+            <button id="btn-save-current-vault" class="btn btn-primary btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save Active Persona
+            </button>
+          </div>
+        </div>
+
+        <div class="vault-grid" id="vault-profiles-grid">
+          <!-- Profiles populated via API -->
+        </div>
+
+        <!-- Local IDE Rules Exporter Sub-Card -->
+        <div class="studio-card mt-4">
+          <div class="card-header">
+            <div class="card-title-group">
+              <span class="badge badge-subtle">Developer Tooling</span>
+              <h3>Export to Local IDE Agents (Claude Code & Cursor)</h3>
+            </div>
+          </div>
+
+          <div class="ide-tabs-row mt-2">
+            <button class="ide-tab active" data-file="claude_md">CLAUDE.md</button>
+            <button class="ide-tab" data-file="cursorrules">.cursorrules</button>
+            <button class="ide-tab" data-file="agents_md">AGENTS.md</button>
+          </div>
+
+          <div class="mt-3">
+            <div class="label-row">
+              <strong id="ide-file-title">CLAUDE.md</strong>
+              <div class="actions-group-inline">
+                <button id="btn-copy-ide-file" class="btn btn-secondary btn-sm">Copy File Content</button>
+              </div>
+            </div>
+            <pre id="ide-file-content" class="code-preview-display mt-2"></pre>
+          </div>
+
+          <!-- Direct Local Project Write -->
+          <div class="direct-write-bar mt-3">
+            <input type="text" id="input-fs-path" value="." placeholder="Project path (e.g. . or /path/to/project)" class="form-input">
+            <button id="btn-execute-fs-sync" class="btn btn-secondary btn-sm">
+              📁 Write Rule Files Directly to Project
+            </button>
+          </div>
+          <div id="fs-sync-status-msg" class="sync-status-indicator d-none mt-2"></div>
+        </div>
+
+        <!-- Raw JSON -->
+        <div class="card mt-4">
+          <div class="card-header">
+            <h3>Active Persona Raw JSON Spec</h3>
+            <span class="badge badge-subtle">UMS v1.0.0</span>
+          </div>
+          <pre id="vault-active-json" class="code-preview-display"></pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast d-none">Copied to clipboard!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

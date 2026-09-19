@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://universalmemoryschema.org/schemas/v1/ums.json",
+  "title": "Universal Memory Schema (UMS)",
+  "description": "An open standard for cross-LLM memory migration, identity preservation, and active context portability.",
+  "type": "object",
+  "required": ["version", "metadata", "tier1_identity", "tier2_active_context"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": ["1.0.0"],
+      "description": "The specification version of this UMS payload."
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["id", "created_at", "source_provider"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this memory snapshot (e.g. UUIDv4)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable label for this profile (e.g. 'Senior Architect', 'Personal')."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_provider": {
+          "type": "string",
+          "enum": ["chatgpt", "claude", "gemini", "cursor", "manual", "generic"],
+          "description": "Where this memory was initially extracted or created."
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "tier1_identity": {
+      "type": "object",
+      "description": "Tier 1: AI Identity & Long-Term Memory (Tech stack, style, rules, persistent traits).",
+      "required": ["profile", "tech_stack", "communication_style", "conventions"],
+      "properties": {
+        "profile": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "role": { "type": "string" },
+            "bio": { "type": "string" },
+            "core_principles": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "tech_stack": {
+          "type": "object",
+          "properties": {
+            "primary_languages": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "frameworks": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "databases": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "toolchains": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "operating_system": { "type": "string" }
+          }
+        },
+        "communication_style": {
+          "type": "object",
+          "properties": {
+            "tone": { "type": "string" },
+            "verbosity": {
+              "type": "string",
+              "enum": ["minimalist", "concise", "balanced", "thorough", "verbose"]
+            },
+            "code_preference": { "type": "string" },
+            "prohibitions": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Things the AI should NEVER do (e.g. 'Never write generic apology templates')."
+            }
+          }
+        },
+        "conventions": {
+          "type": "object",
+          "properties": {
+            "coding_standards": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "architecture_patterns": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "testing_requirements": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "personal_trivia": {
+          "type": "array",
+          "description": "Non-technical or lifestyle preferences (e.g. favorite sports team, hobbies).",
+          "items": {
+            "type": "object",
+            "required": ["topic", "value"],
+            "properties": {
+              "topic": { "type": "string" },
+              "value": { "type": "string" },
+              "is_work_related": { "type": "boolean", "default": false }
+            }
+          }
+        }
+      }
+    },
+    "tier2_active_context": {
+      "type": "object",
+      "description": "Tier 2: Active Working Context (Current tasks, architectural decisions made today, blockers).",
+      "properties": {
+        "current_objective": {
+          "type": "string",
+          "description": "The top-priority goal right now."
+        },
+        "active_projects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "status"],
+            "properties": {
+              "name": { "type": "string" },
+              "status": { "type": "string" },
+              "current_phase": { "type": "string" },
+              "decisions_made_today": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "active_blockers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "next_steps": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "ephemeral_constraints": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Temporary operational rules (e.g. 'Do not modify the auth table during this migration')."
+        }
+      }
+    },
+    "tier3_conversation_transcript": {
+      "type": "object",
+      "description": "Tier 3: Raw chat messages (Optional, strictly separated to prevent context bloat).",
+      "properties": {
+        "included": { "type": "boolean", "default": false },
+        "summary": { "type": "string" },
+        "message_count": { "type": "integer" },
+        "messages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "content"],
+            "properties": {
+              "role": { "type": "string", "enum": ["user", "assistant", "system"] },
+              "content": { "type": "string" },
+              "timestamp": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,456 @@
+/* UMS Browser Extension Popup Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 360px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #090d16;
+  color: #f1f5f9;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 16px;
+}
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 11px;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #101626;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.status-pill.online .status-dot {
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+.status-pill.offline .status-dot {
+  background-color: #f43f5e;
+}
+
+.context-box {
+  background-color: #101626;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.context-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.badge-claude {
+  background-color: rgba(217, 119, 6, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.badge-chatgpt {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-none {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+}
+
+.account-info {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.persona-card {
+  background: linear-gradient(180deg, #101626 0%, #161f36 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.persona-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.persona-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #3b82f6;
+  letter-spacing: 0.05em;
+}
+
+.link-action {
+  color: #60a5fa;
+  font-size: 11px;
+  text-decoration: none;
+}
+.link-action:hover {
+  text-decoration: underline;
+}
+
+.persona-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 2px;
+}
+
+.persona-details {
+  font-size: 11px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #3b82f6;
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background-color: #2563eb;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-secondary {
+  background-color: #161f36;
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.btn-secondary:hover:not(:disabled) {
+  background-color: #1f2b4a;
+  color: #fff;
+}
+
+.status-feedback {
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.status-feedback.success {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-feedback.error {
+  background-color: rgba(244, 63, 94, 0.12);
+  color: #fb7185;
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-link {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 11px;
+}
+.footer-link:hover {
+  color: #94a3b8;
+}
+
+.footer-dot {
+  color: #475569;
+  font-size: 10px;
+}
+
+.d-none {
+  display: none !important;
+}
+
+/* Additional styles for Mode Tabs & Chat Handoff in Popup */
+.mode-tabs {
+  display: flex;
+  background-color: #101626;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 4px;
+}
+
+.mode-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mode-tab.active {
+  background-color: #1e293b;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.badge-emerald {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-subtle {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.distilled-card {
+  background: #111827;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 6px;
+}
+
+.metrics-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.summary-field {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #cbd5e1;
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.btn-emerald {
+  background-color: #059669;
+  color: #fff;
+}
+.btn-emerald:hover:not(:disabled) {
+  background-color: #047857;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+/* Cross-Tab Radar Styles */
+.radar-card {
+  background: linear-gradient(135deg, #0d192e 0%, #112240 100%);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.radar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.radar-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #f1f5f9;
+}
+
+.radar-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.radar-tab-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.radar-tab-role {
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.radar-tab-title {
+  color: #94a3b8;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.radar-controls-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.compact-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  margin-bottom: 3px;
+}
+
+.form-select-compact {
+  width: 100%;
+  background-color: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #f8fafc;
+  font-size: 11px;
+  padding: 5px 8px;
+  outline: none;
+  cursor: pointer;
+}
+
+.form-select-compact:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px #10b981;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px 5px;
+  font-size: 11px;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
