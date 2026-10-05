@@ -115,6 +115,22 @@ UMS then calculates a **Semantic Retention Diff**:
 
 ---
 
+---
+
+## ⚡ RelayAI: 1-Click Cross-Tab Chat Transfer (Zero-Token Handoff)
+
+RelayAI bridges live conversations across **ChatGPT, Claude, Gemini, DeepSeek, Perplexity, and Mistral** in real time:
+
+* **Tab Radar**: Automatically detects active AI model tabs in your browser.
+* **Intelligent 1-Click Handoff**: Scrapes the active discussion, extracts established facts, decisions, and working code, while cutting conversational fluff by **75–85%**.
+* **Zero Guessing Safeguard**: Dual keyboard shortcuts execute only when **exactly one other active AI chat** is open:
+  * **`Alt + Shift + U`** (Mac: **`Option + Shift + U`**): **Condensed Summary Mode** (executive briefing + latest working artifact).
+  * **`Alt + Shift + Y`** (Mac: **`Option + Shift + Y`**): **Full Chat Mode** (100% transcript preservation).
+  * **`Alt + Shift + R`** (Mac: **`Option + Shift + R`**): Opens the RelayAI Extension Popup.
+* **Privacy-First Permissions**: Zero `"tabs"` permission required—eliminates the invasive *"Read your browsing history"* warning.
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -128,18 +144,27 @@ UMS then calculates a **Semantic Retention Diff**:
 │   └── SPECIFICATION.md   # Architectural & protocol specification
 ├── server/
 │   ├── app.py             # Zero-dependency REST API & static server
+│   ├── chat_handoff.py    # High-density distillation & handoff compiler
 │   ├── models.py          # UMS data models & serialization
 │   ├── vault.py           # SQLite persistence layer
 │   ├── diff_engine.py     # Verification & semantic retention engine
 │   ├── parsers/           # ChatGPT, Claude, Gemini, and Raw parsers
 │   └── adapters/          # Claude, ChatGPT, Gemini, and IDE hydrators
+├── extension/             # Chrome Extension (Manifest V3)
+│   ├── manifest.json      # Safe scoped permissions & hotkey commands
+│   ├── background.js      # Service worker, Tab Radar & cross-tab coordinator
+│   ├── content.js         # Non-invasive DOM reader & writer
+│   ├── popup.html/js      # Carbon & Zinc developer dashboard
+│   └── README.md          # 30-second extension installation guide
 ├── client/
 │   ├── index.html         # Responsive Single Page Application
-│   ├── styles.css         # Modern dark/light design system
+│   ├── styles.css         # Matte Carbon & Zinc professional theme
 │   └── app.js             # Reactive UI state & diff inspector
 └── tests/
     ├── test_ums.py        # Core unit tests (parsers, adapters, diff, vault)
-    └── test_api.py        # REST API integration tests
+    ├── test_api.py        # REST API integration tests
+    ├── test_handoff.py    # Zero-token handoff & distillation tests
+    └── test_sync.py       # Filesystem sync tests
 ```
 
 ---
@@ -148,12 +173,13 @@ UMS then calculates a **Semantic Retention Diff**:
 
 Run the complete test suite:
 ```bash
-python3 -m unittest discover -s tests -p "test_*.py"
+python3 -m unittest discover tests
 ```
 
-All 14 automated tests pass in < 0.2 seconds.
+All **32 automated tests** pass in < 0.3 seconds.
 
 ---
 
 ## 📄 License
-Universal Memory Schema (UMS) is released under the **Apache 2.0 License**.
+Universal Memory Schema (UMS) and RelayAI are released under the **Apache 2.0 License**.
+
