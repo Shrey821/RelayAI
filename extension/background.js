@@ -43,10 +43,27 @@ const PROVIDER_META = {
   copilot: { label: "Copilot", color: "#0284c7", icon: "🟦" }
 };
 
-// Detect open tabs for all major LLMs
+const AI_URL_PATTERNS = [
+  "https://chatgpt.com/*",
+  "https://*.chatgpt.com/*",
+  "https://*.openai.com/*",
+  "https://claude.ai/*",
+  "https://*.claude.ai/*",
+  "https://gemini.google.com/*",
+  "https://*.perplexity.ai/*",
+  "https://perplexity.ai/*",
+  "https://*.deepseek.com/*",
+  "https://deepseek.com/*",
+  "https://*.mistral.ai/*",
+  "https://chat.mistral.ai/*",
+  "https://copilot.microsoft.com/*",
+  "https://*.copilot.microsoft.com/*"
+];
+
+// Detect open tabs for all major LLMs (scoped strictly to allowed AI domains)
 async function detectOpenAITabs() {
   try {
-    const tabs = await chrome.tabs.query({});
+    const tabs = await chrome.tabs.query({ url: AI_URL_PATTERNS });
     const chatgptTabs = [];
     const claudeTabs = [];
     const geminiTabs = [];
@@ -203,30 +220,75 @@ async function executeCrossTabTransfer({ source_tab_id, target_tab_id, source_pr
       const tgtLabel = (PROVIDER_META[actualTargetProv]?.label || actualTargetProv);
       
       if (mode === "summary") {
-        primer = [
+        const rawLines = scrapeResponse.raw_chat.split("\n");
+        const userLines = [];
+        const keyBullets = [];
+        let inCode = false;
+        let lastUserMsg = "";
+
+        rawLines.forEach(l => {
+          const trimmed = l.trim();
+          if (trimmed.startsWith("```")) {
+            inCode = !inCode;
+            return;
+          }
+          if (inCode) return;
+          if (/^(User|Human):\s*/i.test(trimmed)) {
+            const clean = trimmed.replace(/^(User|Human):\s*/i, "").trim();
+            if (clean.length > 10) {
+              userLines.push(clean);
+              lastUserMsg = clean;
+            }
+          } else if ((trimmed.startsWith("-") || trimmed.startsWith("*") || trimmed.startsWith("•") || /^\d+\./.test(trimmed)) && trimmed.length > 15) {
+            keyBullets.push(trimmed);
+          }
+        });
+
+        const goal = userLines.length > 0 ? userLines[0].slice(0, 200) : "Active Cross-Model Collaboration";
+        const uniqueBullets = Array.from(new Set(keyBullets)).slice(0, 20);
+
+        const summaryParts = [
           `### 🔄 ACTIVE CHAT HANDOFF (${srcLabel} ➔ ${tgtLabel})`,
-          `ROLE INSTRUCTION: You are taking over an active session transferred from ${srcLabel}.`,
-          `Do NOT ask what to do with this text. Immediately continue solving the pending task.`,
+          `ROLE INSTRUCTION: You are seamlessly taking over an active session transferred from ${srcLabel}.`,
           ``,
-          `### 📋 TRANSFERRED CONVERSATION SUMMARY & WORKING CONTEXT`,
-          scrapeResponse.raw_chat,
+          `### 📋 SESSION OVERVIEW & OBJECTIVE`,
+          `- **Primary Goal**: ${goal}`,
+        ];
+
+        if (userLines.length > 1) {
+          summaryParts.push(``, `### 📌 USER REQUIREMENTS & INQUIRIES`);
+          userLines.slice(1, 8).forEach(u => summaryParts.push(`• ${u}`));
+        }
+
+        if (uniqueBullets.length > 0) {
+          summaryParts.push(``, `### 💡 SYNTHESIZED KNOWLEDGE & ESTABLISHED POINTS`);
+          summaryParts.push(uniqueBullets.join("\n"));
+        } else {
+          summaryParts.push(``, `### 💬 CONVERSATION WORKING CONTEXT`);
+          summaryParts.push(scrapeResponse.raw_chat.slice(0, 3000));
+        }
+
+        summaryParts.push(
           ``,
-          `### 🎯 IMMEDIATE NEXT STEP`,
-          `Please continue directly from the latest turn above without repeating background info.`
-        ].join("\n");
+          `### 🎯 IMMEDIATE NEXT TASK TO SOLVE`,
+          lastUserMsg || `Context recovered if done.`,
+          ``,
+          `---`,
+          `Simply reply with "Context recovered" if done.`
+        );
+
+        primer = summaryParts.join("\n");
         distillData.token_savings_percent = 78.5;
       } else {
         primer = [
           `### 🔄 ACTIVE CHAT THREAD HANDOFF (${srcLabel} ➔ ${tgtLabel})`,
           `ROLE INSTRUCTION: You are taking over an ongoing session transferred directly from ${srcLabel}.`,
-          `Do NOT ask the user what to do with this text or ask them to repeat themselves.`,
-          `Review the transcript below and immediately continue from the last assistant turn.`,
           ``,
           `### 💬 CONVERSATION TRANSCRIPT & SHARED CONTEXT`,
           scrapeResponse.raw_chat,
           ``,
-          `### 🎯 CONTINUATION DIRECTIVE`,
-          `Pick up the active context and continue answering or solving the pending request above.`
+          `---`,
+          `Simply reply with "Context recovered" if done.`
         ].join("\n");
         distillData.token_savings_percent = 0;
       }
@@ -304,3 +366,53 @@ async function executeMemoryTransfer({ payload, target_tab_id, target_provider }
     return { status: "error", message: err.message };
   }
 }
+
+// Universal Keyboard Shortcut Handler (Alt+Shift+U / Option+Shift+U for Summary, Alt+Shift+Y for Full)
+// STRICT REQUIREMENT: Only executes if the user is on an active AI tab AND there is EXACTLY ONE other AI tab open.
+if (chrome.commands && chrome.commands.onCommand) {
+  chrome.commands.onCommand.addListener(async (command) => {
+    if (command === "quick-transfer-summary" || command === "quick-transfer-full") {
+      try {
+        const radar = await detectOpenAITabs();
+        if (!radar || !radar.tabs || radar.tabs.length === 0) return;
+
+        const [currentTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!currentTab) return;
+
+        // 1. Verify the user is currently on an active AI tab
+        const sourceTab = radar.tabs.find(t => t.id === currentTab.id);
+        if (!sourceTab) {
+          console.warn("Relay shortcut ignored: Focused tab is not an active AI chat.");
+          return;
+        }
+
+        // 2. Identify all other open AI tabs
+        const otherAITabs = radar.tabs.filter(t => t.id !== sourceTab.id);
+
+        // 3. STRICT RULE: Must have EXACTLY ONE other AI tab open.
+        // If 0: No target exists.
+        // If >= 2: Target is ambiguous (multiple AI tabs open, user must pick in popup).
+        if (otherAITabs.length !== 1) {
+          console.warn(`Relay shortcut ignored: Expected exactly 1 other AI tab, found ${otherAITabs.length}.`);
+          return;
+        }
+
+        // 4. Exactly one other AI tab exists -> execute transfer!
+        const targetTab = otherAITabs[0];
+        const mode = (command === "quick-transfer-full") ? "full" : "summary";
+
+        await executeCrossTabTransfer({
+          source_tab_id: sourceTab.id,
+          target_tab_id: targetTab.id,
+          source_provider: sourceTab.provider,
+          target_provider: targetTab.provider,
+          mode: mode
+        });
+      } catch (err) {
+        console.error("Keyboard shortcut transfer error:", err);
+      }
+    }
+  });
+}
+
+

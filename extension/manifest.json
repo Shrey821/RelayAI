@@ -15,8 +15,7 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "https://claude.ai/*",
@@ -62,5 +61,28 @@
       "js": ["content.js"],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+R",
+        "mac": "Alt+Shift+R"
+      },
+      "description": "Open RelayAI Extension Popup"
+    },
+    "quick-transfer-summary": {
+      "suggested_key": {
+        "default": "Alt+Shift+U",
+        "mac": "Alt+Shift+U"
+      },
+      "description": "1-Click Relay: Distill condensed summary to single other AI tab"
+    },
+    "quick-transfer-full": {
+      "suggested_key": {
+        "default": "Alt+Shift+Y",
+        "mac": "Alt+Shift+Y"
+      },
+      "description": "1-Click Relay: Transfer full chat transcript to single other AI tab"
+    }
+  }
 }

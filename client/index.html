@@ -3,50 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Universal Memory Schema (UMS) - Cross-LLM Memory Bridge</title>
+  <title>RelayAI — Universal Memory Schema (UMS) | Cross-LLM Memory & Chat Bridge</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Ambient Background Accents -->
+  <div class="ambient-glow-top"></div>
+
   <!-- Application Container -->
   <div class="app-wrapper">
     <!-- Top Header -->
     <header class="navbar">
       <div class="nav-left">
-        <div class="logo-mark">
+        <div class="logo-mark" title="RelayAI — Universal Memory Schema">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
           </svg>
         </div>
         <div class="logo-title">
-          <span class="brand-title">Universal Memory Schema</span>
-          <span class="badge badge-subtle">v1.0.0</span>
+          <div class="brand-text-wrap">
+            <span class="brand-title">Relay<span class="brand-gradient">AI</span></span>
+            <span class="brand-subtitle">Universal Memory Schema</span>
+          </div>
+          <span class="badge badge-version">v1.0.0</span>
         </div>
       </div>
 
       <!-- Streamlined 3-Tab Navigation -->
       <nav class="nav-tabs">
         <button class="nav-tab active" data-tab="studio">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           Memory Migration
         </button>
         <button class="nav-tab" data-tab="handoff">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Chat Handoff
         </button>
         <button class="nav-tab" data-tab="vault">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
           Vault & IDE Rules
         </button>
       </nav>
 
       <div class="nav-right">
-        <div class="extension-status-badge" title="Load extension from /extension directory">
-          <span class="status-dot-emerald"></span>
-          <span>Companion Extension Ready</span>
+        <div class="engine-status-pill" title="Local Server listening on 127.0.0.1:8000">
+          <span class="status-text">127.0.0.1:8000</span>
         </div>
+        <a href="https://github.com/Shrey821/RelayAI" target="_blank" rel="noopener noreferrer" class="btn btn-github btn-sm" title="View Source on GitHub">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
         <button id="btn-load-demo" class="btn btn-primary btn-sm">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Load 1-Click Demo
@@ -68,31 +77,30 @@
             <p class="subtitle">Extract memory via official provider prompts, normalize into UMS, hydrate target LLMs, and verify semantic retention.</p>
           </div>
           <div class="quick-stats-pill">
-            <span class="stat-dot"></span>
             <span>Zero API Keys Required • 100% Browser Compliant</span>
           </div>
         </div>
 
-        <!-- Wizard Stepper Indicator (Clean 4 Steps) -->
+        <!-- Developer Step Navigation (Clean, Sharp, Minimalist) -->
         <div class="stepper-bar">
           <div class="step-node active" data-step="1">
-            <div class="step-num">1</div>
-            <div class="step-label">Source Memory</div>
+            <span class="step-num">01</span>
+            <span class="step-label">Source Memory</span>
           </div>
           <div class="step-connector"></div>
           <div class="step-node" data-step="2">
-            <div class="step-num">2</div>
-            <div class="step-label">Review & Prune</div>
+            <span class="step-num">02</span>
+            <span class="step-label">Review & Prune</span>
           </div>
           <div class="step-connector"></div>
           <div class="step-node" data-step="3">
-            <div class="step-num">3</div>
-            <div class="step-label">Target & Sync</div>
+            <span class="step-num">03</span>
+            <span class="step-label">Target & Sync</span>
           </div>
           <div class="step-connector"></div>
           <div class="step-node" data-step="4">
-            <div class="step-num">4</div>
-            <div class="step-label">Verified Retention</div>
+            <span class="step-num">04</span>
+            <span class="step-label">Verified Retention</span>
           </div>
         </div>
 
@@ -412,15 +420,15 @@
               <div class="diff-stats-grid">
                 <div class="stat-card stat-learned">
                   <div class="stat-value" id="count-learned">0</div>
-                  <div class="stat-name">🟢 Retained / Learned</div>
+                  <div class="stat-name">Retained / Learned</div>
                 </div>
                 <div class="stat-card stat-adapted">
                   <div class="stat-value" id="count-adapted">0</div>
-                  <div class="stat-name">🟡 Adapted / Consolidated</div>
+                  <div class="stat-name">Adapted / Consolidated</div>
                 </div>
                 <div class="stat-card stat-filtered">
                   <div class="stat-value" id="count-filtered">0</div>
-                  <div class="stat-name">🔴 Filtered / Omitted</div>
+                  <div class="stat-name">Filtered / Omitted</div>
                 </div>
               </div>
             </div>
@@ -468,7 +476,6 @@
         <div id="web-radar-panel" class="web-radar-panel mb-4">
           <div class="web-radar-header">
             <div class="web-radar-title-group">
-              <span class="status-dot-emerald"></span>
               <div>
                 <div class="radar-main-title">Live Browser AI Tabs Radar</div>
                 <div id="web-radar-status-text" class="radar-status-subtext">Scanning for open ChatGPT, Claude, Gemini tabs...</div>

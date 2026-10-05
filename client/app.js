@@ -691,7 +691,7 @@ function renderDiffResults(diff) {
     entriesHtml += `
       <div class="diff-card diff-card-learned">
         <div class="diff-card-header">
-          <span class="diff-badge badge-green">🟢 Retained</span>
+          <span class="diff-badge badge-green">Retained</span>
           <span class="diff-item-key">${escapeHtml(item.key)}</span>
         </div>
         <div class="diff-card-body">
@@ -705,7 +705,7 @@ function renderDiffResults(diff) {
     entriesHtml += `
       <div class="diff-card diff-card-adapted">
         <div class="diff-card-header">
-          <span class="diff-badge badge-yellow">🟡 Adapted / Consolidated</span>
+          <span class="diff-badge badge-yellow">Adapted</span>
           <span class="diff-item-key">${escapeHtml(item.key)}</span>
         </div>
         <div class="diff-card-body">
@@ -719,7 +719,7 @@ function renderDiffResults(diff) {
     entriesHtml += `
       <div class="diff-card diff-card-filtered">
         <div class="diff-card-header">
-          <span class="diff-badge badge-red">🔴 Filtered</span>
+          <span class="diff-badge badge-red">Filtered</span>
           <span class="diff-item-key">${escapeHtml(item.key)}</span>
         </div>
         <div class="diff-card-body">
@@ -1056,12 +1056,11 @@ function renderWebRadar(tabsData) {
     let chipsHtml = "";
     allTabs.forEach(tab => {
       const color = tab.color || "#10b981";
-      const icon = tab.icon || "●";
       const label = tab.label || tab.provider.toUpperCase();
       chipsHtml += `
         <div class="web-radar-chip" title="${escapeHtml(tab.fullTitle || tab.title)}">
-          <span class="web-radar-chip-badge" style="background: ${color}25; color: ${color}; border: 1px solid ${color}50;">
-            ${icon} ${label}${tab.active ? ' (Active)' : ''}
+          <span class="web-radar-chip-badge" style="background: rgba(255, 255, 255, 0.06); color: var(--text-main); border: 1px solid var(--border-color);">
+            ${label}${tab.active ? ' (Active)' : ''}
           </span>
           <span>${escapeHtml(tab.title)}</span>
         </div>
@@ -1088,7 +1087,7 @@ function populateWebSourceDropdown(allTabs) {
     opt.value = tab.id;
     opt.dataset.provider = tab.provider;
     opt.dataset.label = tab.label || tab.provider;
-    opt.textContent = `${tab.icon || "●"} [${tab.label || tab.provider.toUpperCase()}] ${tab.title}`;
+    opt.textContent = `[${tab.label || tab.provider.toUpperCase()}] ${tab.title}`;
     srcSelect.appendChild(opt);
   });
 
@@ -1122,7 +1121,7 @@ function populateWebTargetDropdown(allTabs) {
       opt.value = t.id;
       opt.dataset.provider = t.provider;
       opt.dataset.label = t.label || t.provider;
-      opt.textContent = `${t.icon || "●"} [${t.label || t.provider.toUpperCase()}] ${t.title}`;
+      opt.textContent = `[${t.label || t.provider.toUpperCase()}] ${t.title}`;
       groupOther.appendChild(opt);
     });
     tgtSelect.appendChild(groupOther);
@@ -1132,12 +1131,12 @@ function populateWebTargetDropdown(allTabs) {
   const groupNew = document.createElement("optgroup");
   groupNew.label = "── Open in New Tab ──";
   const newOptions = [
-    { prov: "claude", label: "Claude", icon: "🟠" },
-    { prov: "chatgpt", label: "ChatGPT", icon: "🟢" },
-    { prov: "gemini", label: "Gemini", icon: "🔵" },
-    { prov: "perplexity", label: "Perplexity", icon: "🌐" },
-    { prov: "deepseek", label: "DeepSeek", icon: "🐋" },
-    { prov: "mistral", label: "Mistral", icon: "🌸" }
+    { prov: "claude", label: "Claude" },
+    { prov: "chatgpt", label: "ChatGPT" },
+    { prov: "gemini", label: "Gemini" },
+    { prov: "perplexity", label: "Perplexity" },
+    { prov: "deepseek", label: "DeepSeek" },
+    { prov: "mistral", label: "Mistral" }
   ];
 
   newOptions.forEach(item => {
@@ -1145,7 +1144,7 @@ function populateWebTargetDropdown(allTabs) {
     opt.value = `new_${item.prov}`;
     opt.dataset.provider = item.prov;
     opt.dataset.label = item.label;
-    opt.textContent = `${item.icon} ➕ Open New Tab: ${item.label}`;
+    opt.textContent = `+ New Tab: ${item.label}`;
     groupNew.appendChild(opt);
   });
   tgtSelect.appendChild(groupNew);

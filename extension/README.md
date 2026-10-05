@@ -13,11 +13,15 @@ Enables **1-Click AI Memory Ingestion & Verification** directly inside your auth
    - **Arc**: Open Settings → Extensions
 2. Enable **"Developer mode"** (toggle in the top right corner).
 3. Click the **"Load unpacked"** button in the top left.
-4. Select the directory:
-   ```
-   /Users/shreyanshshailesh/Desktop/UMS Universal Memory Schema/extension
-   ```
+4. Select the `extension/` directory inside this cloned repository.
 5. Pin the **UMS Memory Bridge** extension to your toolbar!
+
+---
+
+## ⌨️ Universal Keyboard Shortcuts
+
+* **`Alt + Shift + R`** (Mac: **`Option + Shift + R`**): Instantly opens the RelayAI popup anywhere on your screen.
+* **`Alt + Shift + U`** (Mac: **`Option + Shift + U`**): 1-Click Transfer—distills the active chat and injects it into your target AI model without opening the popup.
 
 ---
 

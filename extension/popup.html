@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UMS Memory & Chat Bridge</title>
+  <title>RelayAI Companion</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,146 +11,137 @@
     <!-- Header -->
     <header class="header">
       <div class="logo-group">
-        <div class="logo-mark">UMS</div>
-        <div>
-          <h1 class="title">UMS Companion</h1>
-          <span class="subtitle">Cross-Tab Detection & Auto-Transfer</span>
+        <div class="logo-mark">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="title">Relay<span class="brand-accent">AI</span></h1>
+          <span class="subtitle">Cross-LLM Context Bridge</span>
         </div>
       </div>
-      <div id="server-status-pill" class="status-pill offline" title="Connection to local UMS server">
-        <span class="status-dot"></span>
+      <div id="server-status-pill" class="status-pill offline" title="Connection to local RelayAI server">
         <span id="server-status-text">Checking</span>
       </div>
     </header>
 
-    <!-- LIVE CROSS-TAB RADAR -->
-    <div class="radar-card" id="radar-card">
-      <div class="radar-header">
-        <div class="radar-title">
-          <span class="radar-pulse"></span>
-          <strong>Live AI Tabs Radar</strong>
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="badge badge-emerald" id="radar-count-badge">Scanning...</span>
-          <button id="btn-rescan-tabs" class="btn-icon" title="Rescan open AI tabs">🔄</button>
-        </div>
-      </div>
-
-      <div class="radar-tabs-list mt-2" id="radar-tabs-list">
-        <div class="radar-tab-row">
-          <span class="radar-tab-role">Scanning open tabs...</span>
-        </div>
-      </div>
-
-      <!-- INTERACTIVE SOURCE & TARGET CHAT PICKERS -->
-      <div id="radar-controls-box" class="radar-controls-box mt-2 d-none">
-        <div class="selector-field">
-          <label class="compact-label" for="radar-source-select">Source Chat (Extract From):</label>
-          <select id="radar-source-select" class="form-select-compact"></select>
-        </div>
-
-        <div class="selector-field mt-1">
-          <label class="compact-label" for="radar-target-select">Target Chat (Send To):</label>
-          <select id="radar-target-select" class="form-select-compact"></select>
-        </div>
-
-        <div class="radar-actions-dual mt-2">
-          <button id="btn-auto-transfer-full" class="btn btn-emerald w-100">
-            ⚡ 1-Click Transfer (Full Chat As-Is)
-          </button>
-          <button id="btn-auto-transfer-summary" class="btn btn-secondary w-100 mt-1">
-            🧠 1-Click Transfer (Condensed Summary)
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mode Selector Tabs -->
+    <!-- Mode Selector Tabs (Clean & Modest) -->
     <div class="mode-tabs">
       <button id="tab-btn-handoff" class="mode-tab active" data-mode="handoff">
-        🔄 Chat Handoff
+        Chat Handoff
       </button>
       <button id="tab-btn-memory" class="mode-tab" data-mode="memory">
-        🧠 Memory Ingest
+        Memory Sync
       </button>
     </div>
 
-    <!-- VIEW 1: ACTIVE CHAT HANDOFF & CONTEXT TRANSFER -->
+    <!-- VIEW 1: CHAT HANDOFF (Unified & Clear) -->
     <div id="view-handoff" class="mode-view active">
-      <div class="persona-card">
-        <div class="persona-header">
-          <span class="persona-tag">Zero-Token Thread Distillation</span>
-          <span class="badge badge-emerald" id="badge-transfer-target">Target: Auto</span>
+      <div class="card" id="radar-card">
+        <!-- Active Tabs Radar Bar -->
+        <div class="radar-status-bar">
+          <div class="radar-status-left">
+            <span class="radar-label">Detected AI Tabs</span>
+            <span class="badge" id="radar-count-badge">Scanning...</span>
+          </div>
+          <button id="btn-rescan-tabs" class="btn-icon-subtle" title="Rescan open tabs">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
         </div>
-        <div class="persona-title" id="handoff-status-title">Transfer Active Conversation</div>
-        <div class="persona-details" id="handoff-status-details">Extracts code, decisions, and next steps with 0 tokens burned.</div>
+
+        <!-- Open Tabs List -->
+        <div class="radar-tabs-list" id="radar-tabs-list">
+          <div class="radar-tab-row">
+            <span class="radar-tab-role">Scanning open tabs...</span>
+          </div>
+        </div>
+
+        <!-- Source & Target Chat Selectors -->
+        <div id="radar-controls-box" class="radar-controls-box mt-3 d-none">
+          <div class="selector-field">
+            <label class="field-label" for="radar-source-select">From (Source Chat):</label>
+            <div class="select-wrapper">
+              <select id="radar-source-select" class="form-select"></select>
+            </div>
+          </div>
+
+          <div class="selector-field mt-2">
+            <label class="field-label" for="radar-target-select">To (Destination Chat):</label>
+            <div class="select-wrapper">
+              <select id="radar-target-select" class="form-select"></select>
+            </div>
+          </div>
+
+          <!-- Modest, Clear Transfer Buttons -->
+          <div class="transfer-actions mt-3">
+            <button id="btn-auto-transfer-summary" class="btn btn-primary w-100">
+              Transfer Condensed Summary ➔
+            </button>
+            <button id="btn-auto-transfer-full" class="btn btn-ghost w-100 mt-1">
+              Transfer Full Transcript (As-Is)
+            </button>
+          </div>
+        </div>
+
+        <!-- Fallback Quick Trigger -->
+        <div class="fallback-row mt-2">
+          <button id="btn-distill-active-chat" class="btn-link">
+            ⚡ Distill current tab directly
+          </button>
+        </div>
       </div>
 
-      <div class="actions-group mt-2">
-        <button id="btn-distill-active-chat" class="btn btn-primary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Distill & Transfer Current Tab
-        </button>
-
-        <!-- Distilled Results Details (hidden initially) -->
-        <div id="distilled-summary-card" class="distilled-card d-none">
-          <div class="metrics-row">
-            <span class="badge badge-emerald" id="metric-savings">Savings: 92%</span>
-            <span class="badge badge-subtle" id="metric-tokens">~280 tokens</span>
-          </div>
-          <div class="summary-field mt-1">
-            <strong>Goal:</strong> <span id="distill-goal">Loading...</span>
-          </div>
-          <div class="summary-field">
-            <strong>Next Task:</strong> <span id="distill-next">Loading...</span>
-          </div>
-
-          <div class="actions-group mt-2">
-            <button id="btn-open-and-inject" class="btn btn-emerald">
-              🚀 Inject Context into Target Tab
-            </button>
-            <button id="btn-copy-handoff-primer" class="btn btn-secondary btn-sm">
-              📋 Copy Distilled Handoff Primer
-            </button>
-          </div>
+      <!-- Distilled Results Details (Shown after transfer or distillation) -->
+      <div id="distilled-summary-card" class="result-card d-none mt-2">
+        <div class="result-header">
+          <span class="badge badge-emerald" id="metric-savings">Savings: 92%</span>
+          <span class="badge badge-subtle" id="metric-tokens">~280 tokens</span>
+        </div>
+        <div class="result-body mt-2">
+          <div class="result-line"><strong>Goal:</strong> <span id="distill-goal">-</span></div>
+          <div class="result-line"><strong>Next:</strong> <span id="distill-next">-</span></div>
+        </div>
+        <div class="result-actions mt-2">
+          <button id="btn-open-and-inject" class="btn btn-primary btn-sm">
+            Launch & Inject Context
+          </button>
+          <button id="btn-copy-handoff-primer" class="btn btn-secondary btn-sm">
+            Copy Prompt
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- VIEW 2: LONG-TERM MEMORY -->
+    <!-- VIEW 2: LONG-TERM MEMORY (Clean & Modest) -->
     <div id="view-memory" class="mode-view d-none">
-      <div class="persona-card">
-        <div class="persona-header">
-          <span class="persona-tag">Active Memory Persona</span>
-          <a href="http://127.0.0.1:8000" target="_blank" class="link-action">Switch</a>
+      <div class="card">
+        <div class="card-header-compact">
+          <span class="section-tag">Active Memory Profile</span>
+          <a href="http://127.0.0.1:8000" target="_blank" class="link-subtle">Open Vault ↗</a>
         </div>
-        <div id="persona-name" class="persona-title">Loading persona...</div>
-        <div id="persona-tech" class="persona-details">Connecting to local UMS vault...</div>
-      </div>
+        <div id="persona-name" class="profile-title mt-1">Lead Full-Stack Architect</div>
+        <div id="persona-tech" class="profile-subtitle">TypeScript, Next.js, Python</div>
 
-      <div class="actions-group mt-2">
-        <button id="btn-auto-inject" class="btn btn-primary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          1-Click Inject Memory into Account
-        </button>
-
-        <button id="btn-verify-chat" class="btn btn-secondary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-          Send Verification Query in Chat
-        </button>
+        <div class="actions-group mt-3">
+          <button id="btn-auto-inject" class="btn btn-primary w-100">
+            Sync Memory into Active Tab
+          </button>
+          <button id="btn-verify-chat" class="btn btn-secondary w-100 mt-2">
+            Send Verification Query
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Status Message Display -->
     <div id="status-feedback" class="status-feedback d-none"></div>
 
-    <!-- Quick Links -->
+    <!-- Modest Footer -->
     <footer class="footer">
-      <a href="https://claude.ai" target="_blank" class="footer-link">Claude.ai</a>
+      <a href="http://127.0.0.1:8000" target="_blank" class="footer-link">RelayAI Dashboard</a>
       <span class="footer-dot">•</span>
-      <a href="https://chatgpt.com" target="_blank" class="footer-link">ChatGPT</a>
-      <span class="footer-dot">•</span>
-      <a href="http://127.0.0.1:8000" target="_blank" class="footer-link">UMS Dashboard</a>
+      <a href="https://github.com/Shrey821/RelayAI" target="_blank" class="footer-link">GitHub</a>
     </footer>
   </div>
 

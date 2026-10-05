@@ -17,3 +17,7 @@ ums_vault.db
 *.log
 scratch/
 .system_generated/
+
+# Personal / Local presentation files
+Hostel_Council_Campaign_*.pptx
+

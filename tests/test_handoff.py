@@ -196,5 +196,61 @@ User: Can you show me an example of an OpenTelemetry trace in Python?"""
                 self.assertEqual(res["source_provider"], src)
                 self.assertEqual(res["target_provider"], tgt)
 
+    def test_ending_directive_context_recovered(self):
+        # 1. Thread ending on user turn
+        sample_user = "User: How do I configure Redis?\nAssistant: Install redis-py.\nUser: What port does it use?"
+        res_user = distill_chat_thread(sample_user, "chatgpt", "claude")
+        self.assertIn('Simply reply with "Context recovered" if done.', res_user["handoff_primer"])
+
+        # 2. Thread ending on assistant turn
+        sample_asst = "User: How do I configure Redis?\nAssistant: Redis defaults to port 6379."
+        res_asst = distill_chat_thread(sample_asst, "chatgpt", "claude")
+        self.assertEqual(res_asst["immediate_next_task"], "Context recovered if done.")
+        self.assertIn('Simply reply with "Context recovered" if done.', res_asst["handoff_primer"])
+
+    def test_comprehensive_condensed_summary_coverage(self):
+        multi_turn_chat = """User: We are designing an event-driven architecture using Apache Kafka and Python.
+Assistant: Kafka is ideal for decoupled asynchronous pipelines. You should use kafka-python or confluent-kafka.
+User: We tried kafka-python but had issues with SASL SSL authentication.
+Assistant: confluent-kafka wraps librdkafka and handles SASL_SSL much better.
+User: We decided to switch to confluent-kafka. Make sure it uses TLS 1.3 and auto-commit is disabled.
+Assistant: Here is the producer configuration:
+1. bootstrap.servers must point to your brokers.
+2. security.protocol is SASL_SSL.
+3. enable.auto.commit must be false for exactly-once processing semantics.
+User: Here is our consumer setup:
+```python
+from confluent_kafka import Consumer
+conf = {'bootstrap.servers': 'localhost:9092', 'group.id': 'group1', 'enable.auto.commit': False}
+c = Consumer(conf)
+```
+Assistant: That consumer correctly disables auto-commit. Make sure to commit offsets manually after processing.
+User: Now how do we handle dead-letter queues (DLQ) when serialization fails?"""
+
+        res = distill_chat_thread(multi_turn_chat, "chatgpt", "claude", mode="summary")
+        primer = res["handoff_primer"]
+
+        # 1. Primary goal
+        self.assertIn("Apache Kafka", primer)
+        # 2. Key decisions
+        self.assertIn("confluent-kafka", primer)
+        # 3. User requirements & constraints
+        self.assertIn("### 📌 USER REQUIREMENTS, INQUIRIES & CONSTRAINTS", primer)
+        self.assertIn("auto-commit is disabled", primer)
+        # 4. Conversation progression & milestones
+        self.assertIn("### 🔄 CONVERSATION PROGRESSION & MILESTONES", primer)
+        # 5. Synthesized knowledge points
+        self.assertIn("### 💡 SYNTHESIZED KNOWLEDGE & ESTABLISHED POINTS", primer)
+        self.assertIn("librdkafka", primer)
+        self.assertIn("exactly-once processing", primer)
+        # 6. Code artifact
+        self.assertIn("### 💻 LATEST WORKING ARTIFACT (PYTHON)", primer)
+        self.assertIn("confluent_kafka", primer)
+        # 7. Next task
+        self.assertIn("dead-letter queues", res["immediate_next_task"])
+        self.assertIn('Simply reply with "Context recovered" if done.', primer)
+        self.assertGreaterEqual(res["token_savings_percent"], 60.0)
+
 if __name__ == "__main__":
     unittest.main()
+

@@ -5,6 +5,23 @@
 
 const UMS_HOST = "http://127.0.0.1:8000";
 
+const AI_URL_PATTERNS = [
+  "https://chatgpt.com/*",
+  "https://*.chatgpt.com/*",
+  "https://*.openai.com/*",
+  "https://claude.ai/*",
+  "https://*.claude.ai/*",
+  "https://gemini.google.com/*",
+  "https://*.perplexity.ai/*",
+  "https://perplexity.ai/*",
+  "https://*.deepseek.com/*",
+  "https://deepseek.com/*",
+  "https://*.mistral.ai/*",
+  "https://chat.mistral.ai/*",
+  "https://copilot.microsoft.com/*",
+  "https://*.copilot.microsoft.com/*"
+];
+
 let detectedTabs = null;
 let currentPersonaPayload = null;
 let currentProvider = "unknown";
@@ -84,20 +101,20 @@ async function scanOpenAITabs() {
   };
 
   const icons = {
-    chatgpt: "🟢",
-    claude: "🟠",
-    gemini: "🔵",
-    perplexity: "🌐",
-    deepseek: "🐋",
-    mistral: "🌸",
-    copilot: "🟦"
+    chatgpt: "",
+    claude: "",
+    gemini: "",
+    perplexity: "",
+    deepseek: "",
+    mistral: "",
+    copilot: ""
   };
 
   try {
     // 1. Direct tab query from popup (immediate, resilient)
     let rawTabs = [];
     if (chrome.tabs && chrome.tabs.query) {
-      rawTabs = await chrome.tabs.query({});
+      rawTabs = await chrome.tabs.query({ url: AI_URL_PATTERNS });
     }
 
     const aiTabs = [];
@@ -135,7 +152,7 @@ async function scanOpenAITabs() {
           provider: prov,
           label: provLabel,
           color: colors[prov] || "#10b981",
-          icon: icons[prov] || "●"
+          icon: ""
         });
       }
     });
@@ -179,7 +196,7 @@ function renderRadarTabsUI(tabsData) {
   allTabs.forEach(tab => {
     html += `
       <div class="radar-tab-row">
-        <span class="radar-tab-role" style="color: ${tab.color};">${tab.icon} ${tab.label}${tab.active ? ' (Active)' : ''}:</span>
+        <span class="radar-tab-role">[${tab.label}]${tab.active ? ' (Active)' : ''}:</span>
         <span class="radar-tab-title" title="${escapeHtml(tab.fullTitle)}">${escapeHtml(tab.title)}</span>
       </div>
     `;
@@ -204,7 +221,7 @@ function populateSourceDropdown(allTabs) {
     opt.value = tab.id;
     opt.dataset.provider = tab.provider;
     opt.dataset.label = tab.label;
-    opt.textContent = `${tab.icon} [${tab.label}] ${tab.title}`;
+    opt.textContent = `[${tab.label}] ${tab.title}`;
     if (tab.active) activeIndex = idx;
     srcSelect.appendChild(opt);
   });
@@ -236,7 +253,7 @@ function populateTargetDropdown(allTabs) {
       opt.value = t.id;
       opt.dataset.provider = t.provider;
       opt.dataset.label = t.label;
-      opt.textContent = `${t.icon} [${t.label}] ${t.title}`;
+      opt.textContent = `[${t.label}] ${t.title}`;
       groupOther.appendChild(opt);
     });
     tgtSelect.appendChild(groupOther);
@@ -246,12 +263,12 @@ function populateTargetDropdown(allTabs) {
   const groupNew = document.createElement("optgroup");
   groupNew.label = "── Open in New Tab ──";
   const newOptions = [
-    { prov: "claude", label: "Claude", icon: "🟠" },
-    { prov: "chatgpt", label: "ChatGPT", icon: "🟢" },
-    { prov: "gemini", label: "Gemini", icon: "🔵" },
-    { prov: "perplexity", label: "Perplexity", icon: "🌐" },
-    { prov: "deepseek", label: "DeepSeek", icon: "🐋" },
-    { prov: "mistral", label: "Mistral", icon: "🌸" }
+    { prov: "claude", label: "Claude" },
+    { prov: "chatgpt", label: "ChatGPT" },
+    { prov: "gemini", label: "Gemini" },
+    { prov: "perplexity", label: "Perplexity" },
+    { prov: "deepseek", label: "DeepSeek" },
+    { prov: "mistral", label: "Mistral" }
   ];
 
   newOptions.forEach(item => {
@@ -259,7 +276,7 @@ function populateTargetDropdown(allTabs) {
     opt.value = `new_${item.prov}`;
     opt.dataset.provider = item.prov;
     opt.dataset.label = item.label;
-    opt.textContent = `${item.icon} ➕ Open New Tab: ${item.label}`;
+    opt.textContent = `+ Open New Tab: ${item.label}`;
     groupNew.appendChild(opt);
   });
   tgtSelect.appendChild(groupNew);
@@ -285,11 +302,10 @@ function updateButtonLabels() {
 
   if (!srcSelect || !tgtSelect || !btnFull || !btnSummary) return;
 
-  const srcLabel = srcSelect.selectedOptions[0]?.dataset?.label || "Source";
   const tgtLabel = tgtSelect.selectedOptions[0]?.dataset?.label || "Target";
 
-  btnFull.innerHTML = `⚡ 1-Click Transfer Full Chat (${srcLabel} ➔ ${tgtLabel})`;
-  btnSummary.innerHTML = `🧠 1-Click Transfer Condensed Summary (${srcLabel} ➔ ${tgtLabel})`;
+  btnSummary.innerHTML = `Transfer Summary to ${tgtLabel} ➔`;
+  btnFull.innerHTML = `Transfer Full Chat (As-Is)`;
 }
 
 // Fetch active persona from local UMS vault or demo
