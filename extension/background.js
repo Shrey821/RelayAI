@@ -13,7 +13,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.action === "auto_transfer_chat") {
-    executeCrossTabTransfer(request).then(result => sendResponse(result));
+    const payload = { ...request };
+    if (!payload.source_tab_id && sender.tab && sender.tab.id) {
+      payload.source_tab_id = sender.tab.id;
+    }
+    executeCrossTabTransfer(payload).then(result => sendResponse(result));
     return true;
   }
 

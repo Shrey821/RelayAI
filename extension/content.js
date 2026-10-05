@@ -313,3 +313,197 @@ async function sendVerificationQuery(query) {
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// =========================================================================
+// Dynamic In-Page Floating Relay Pill (Matte Carbon & Zinc Theme)
+// Automatically detects active target AI tab and displays platform hotkey
+// =========================================================================
+
+function isMacPlatform() {
+  return /Mac|iPod|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+}
+
+function initFloatingRelayPill() {
+  const currentProv = getPageProvider();
+  if (currentProv === "web" || document.getElementById("relayai-floating-pill")) return;
+
+  const isMac = isMacPlatform();
+  const summaryKeyLabel = isMac ? "⌥⇧U" : "Alt+Shift+U";
+
+  // Create HUD Pill Container
+  const pill = document.createElement("div");
+  pill.id = "relayai-floating-pill";
+  pill.setAttribute("role", "button");
+  pill.setAttribute("aria-label", "RelayAI 1-Click Context Transfer");
+
+  // Modern Matte Carbon Style
+  Object.assign(pill.style, {
+    position: "fixed",
+    bottom: "24px",
+    right: "24px",
+    zIndex: "2147483647",
+    background: "#18191e",
+    border: "1px solid #2b2c34",
+    borderRadius: "8px",
+    color: "#f4f4f5",
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    fontSize: "12px",
+    fontWeight: "500",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "7px 12px",
+    boxShadow: "0 6px 20px rgba(0, 0, 0, 0.45)",
+    cursor: "pointer",
+    transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+    userSelect: "none",
+    backdropFilter: "blur(12px)",
+    opacity: "0",
+    transform: "translateY(8px)"
+  });
+
+  pill.innerHTML = `
+    <span style="color: #10b981; font-size: 13px; line-height: 1;">⚡</span>
+    <span id="relayai-pill-label" style="letter-spacing: -0.01em;">Checking tabs...</span>
+    <kbd id="relayai-pill-kbd" style="background: #22232a; border: 1px solid #33343e; border-radius: 4px; padding: 2px 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; color: #a1a1aa; font-weight: 600;">${summaryKeyLabel}</kbd>
+    <span id="relayai-pill-close" title="Minimize" style="color: #71717a; margin-left: 2px; font-size: 13px; padding: 0 2px; border-radius: 3px; line-height: 1; cursor: pointer;">✕</span>
+  `;
+
+  document.body.appendChild(pill);
+
+  // Fade in
+  requestAnimationFrame(() => {
+    pill.style.opacity = "1";
+    pill.style.transform = "translateY(0)";
+  });
+
+  let currentTargetTab = null;
+  let isMinimizing = false;
+
+  // Hover animations
+  pill.addEventListener("mouseenter", () => {
+    if (!pill.classList.contains("disabled")) {
+      pill.style.background = "#1f2026";
+      pill.style.borderColor = "#3b3c45";
+      pill.style.transform = "translateY(-1px)";
+      pill.style.boxShadow = "0 8px 28px rgba(0, 0, 0, 0.6)";
+    }
+  });
+
+  pill.addEventListener("mouseleave", () => {
+    pill.style.background = "#18191e";
+    pill.style.borderColor = "#2b2c34";
+    pill.style.transform = "translateY(0)";
+    pill.style.boxShadow = "0 6px 20px rgba(0, 0, 0, 0.45)";
+  });
+
+  // Close / Minimize listener
+  const closeBtn = pill.querySelector("#relayai-pill-close");
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    isMinimizing = true;
+    pill.style.transition = "all 0.25s ease";
+    pill.style.opacity = "0";
+    pill.style.transform = "translateY(12px) scale(0.95)";
+    setTimeout(() => {
+      pill.style.display = "none";
+    }, 250);
+  });
+
+  // State update logic
+  async function updatePillState() {
+    if (isMinimizing || !document.body.contains(pill)) return;
+
+    try {
+      chrome.runtime.sendMessage({ action: "get_open_ai_tabs" }, (response) => {
+        if (chrome.runtime.lastError || !response || response.status !== "success") return;
+
+        const allTabs = response.tabs || [];
+        const otherTabs = allTabs.filter(t => t.provider !== currentProv);
+        const labelEl = document.getElementById("relayai-pill-label");
+        const kbdEl = document.getElementById("relayai-pill-kbd");
+
+        if (!labelEl || !kbdEl) return;
+
+        if (otherTabs.length === 1) {
+          // EXACTLY ONE OTHER AI TAB
+          currentTargetTab = otherTabs[0];
+          pill.classList.remove("disabled");
+          pill.style.opacity = "1";
+          pill.style.pointerEvents = "auto";
+          labelEl.textContent = `Relay to ${currentTargetTab.label}`;
+          kbdEl.textContent = summaryKeyLabel;
+          kbdEl.style.display = "inline-block";
+        } else if (otherTabs.length > 1) {
+          // MULTIPLE OTHER TABS (Ambiguous target)
+          currentTargetTab = null;
+          pill.classList.remove("disabled");
+          pill.style.opacity = "1";
+          pill.style.pointerEvents = "auto";
+          labelEl.textContent = `Relay (${otherTabs.length} Tabs Open)`;
+          kbdEl.textContent = isMac ? "⌥⇧R" : "Alt+Shift+R";
+          kbdEl.style.display = "inline-block";
+        } else {
+          // ZERO OTHER AI TABS
+          currentTargetTab = null;
+          pill.classList.add("disabled");
+          pill.style.opacity = "0.65";
+          labelEl.textContent = "Relay (Open 2nd AI Tab)";
+          kbdEl.style.display = "none";
+        }
+      });
+    } catch (err) {
+      // Ignore background transient errors
+    }
+  }
+
+  // Click Action
+  pill.addEventListener("click", async () => {
+    const labelEl = document.getElementById("relayai-pill-label");
+    if (!labelEl) return;
+
+    if (!currentTargetTab) {
+      labelEl.textContent = "Open 2nd AI tab (e.g. Claude) to relay";
+      setTimeout(updatePillState, 2000);
+      return;
+    }
+
+    const originalText = labelEl.textContent;
+    labelEl.textContent = `Distilling ➔ ${currentTargetTab.label}...`;
+    pill.style.borderColor = "#10b981";
+
+    try {
+      chrome.runtime.sendMessage({
+        action: "auto_transfer_chat",
+        target_tab_id: currentTargetTab.id,
+        source_provider: currentProv,
+        target_provider: currentTargetTab.provider,
+        mode: "summary"
+      }, (res) => {
+        if (res && res.status === "success") {
+          labelEl.textContent = `✓ Teleported to ${currentTargetTab.label}!`;
+          setTimeout(updatePillState, 2500);
+        } else {
+          labelEl.textContent = res ? res.message : "Transfer error";
+          setTimeout(updatePillState, 2500);
+        }
+      });
+    } catch (err) {
+      labelEl.textContent = "Transfer error";
+      setTimeout(updatePillState, 2000);
+    }
+  });
+
+  // Initial check & periodic sync
+  updatePillState();
+  window.addEventListener("focus", updatePillState);
+  setInterval(updatePillState, 4000);
+}
+
+// Initialize pill when DOM is ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initFloatingRelayPill);
+} else {
+  initFloatingRelayPill();
+}
+
